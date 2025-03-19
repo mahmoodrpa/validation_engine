@@ -1,0 +1,73 @@
+
+{% extends "base.html" %}
+
+{% load model_helpers %}
+{% block content %}
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 0px;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  form {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 0 auto;
+    width: 400px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  input[type="file"] {
+    margin-top: 0px;
+  }
+
+  button[type="submit"] {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 0px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+</style>
+</head>
+<body>
+<h1>Upload Excel Data</h1>
+
+{% if upload_status == 'success' %}
+    <p>Upload successful!</p>
+{% elif upload_status == 'failure' %}
+    <p>Upload failed. Please try again.</p>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <label for="filter_option">Filter Option:</label>
+  <select name="filter_option" id="filter_option">
+    {% for option in filter_options %}
+    <option value="{{ option }}">{{ option }}</option>
+    {% endfor %}
+  </select>
+  <br>
+  <label for="excel_file">Choose an Excel file:</label>
+  <input type="file" name="excel_file" id="excel_file">
+  <br>
+  <input type="submit" value="Upload">
+</form>
+
+</body>
+  {% endblock %}

@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}Validation Engine{% endblock %}
+{% load model_helpers %}
+{% block content %}
+<body>
+  <div class="page-body">
+    <div class="container-xl">
+      <div class="card">
+        <h2 font align=center> <strong>Validation Engine - Pricing </strong> </h2>
+      </div>
+    </div>
+    <br/>
+    <div class="container-xl">
+      <div class="card">
+        <h2 font align=center> <strong>
+          <form method="GET" action="{% url 'pricing_validation_engine' %}">
+          <div class="row">
+            <div class="col-8">
+              <div class="mb-3">
+                <label class="form-label">Search</label>
+                <div class="row g-2">
+                  <div class="col">
+                    <input type="text" name="search" class="form-control" placeholder="Search" value="{{ search_query }}">
+                  </div>
+                  <div class="col">
+                    <select name="sort" class="form-select">
+                      <option value="inv_sku" {% if sort_by == 'inv_sku' %}selected{% endif %}>INV_SKU</option>
+                      <option value="validation_status" {% if sort_by == 'validation_status' %}selected{% endif %}>Validation Status</option>
+                      <!-- Add options for other sortable fields -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="mb-3">
+                <div class="form-label"><br/></div>
+                <button type="submit" class="btn btn-primary">Apply</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        </strong> </h2>
+      </div>
+    </div>
+    <br/>
+    <!-- Add the summary section here -->
+    <!-- Header -->
+    <div class="page-body">
+      <div class="container-xl">
+        <div class="row row-cards">
+          <div class="col-12">
+            <div class="row row-cards row-deck">
+              <div class="col">
+                <div class="card">
+                  <div class="card-status-top bg-blue"></div>
+                  <div class="card-header">
+                    <h3 class="card-title">Total Deductions</h3>
+                  </div>
+                  <div class="card-body" style="color:#15558d">
+                    Total Deductions: ${{ total_deductions }}<br>
+                    No. of Transactions: {{ num_rows }}
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="card">
+                  <div class="card-status-top bg-red"></div>
+                  <div class="card-header">
+                    <h3 class="card-title">Total Invalid</h3>
+                  </div>
+                  <div class="card-body" style="color:#721c24">
+                    Total Invalid: ${{ total_invalid }}<br>
+                    No. of Transactions: {{ invalid_rows }}
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="card">
+                  <div class="card-status-top bg-green"></div>
+                  <div class="card-header">
+                    <h3 class="card-title">Total Valid</h3>
+                  </div>
+                  <div class="card-body" style="color:#155724">
+                    Total Valid: ${{ total_valid }}<br>
+                    No. of Transactions: {{ valid_rows }}
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="card">
+                  <div class="card-status-top bg-purple"></div>
+                  <div class="card-header">
+                    <h3 class="card-title">RCA Split</h3>
+                  </div>
+                  <div class="card-body" style="color: #856404;">
+                    <span>Unit of Measurement Issue: ${{ rca_split.unit_of_measurement_issue }}</span><br>
+                    <span>Price change was communicated on time: ${{ rca_split.price_change_communicated_on_time }}</span><br>
+                    <span>Price change was communicated late: ${{ rca_split.price_change_communicated_late }}</span><br>
+                    <span>Price change was not communicated: ${{ rca_split.price_change_not_communicated }}</span><br>
+                     
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div style="margin-top: 20px;"></div>
+    <br/>
+    <a href="?export" class="btn btn-primary">Export to Excel</a>
+    <div class="page">
+      <div class="row row-cards">
+        <div class="col-12">
+          <div class="card">
+            <div class="table-responsive">
+              <table class="table card-table table-vcenter text-nowrap datatable">
+                <thead>
+                  <tr class="text-center">
+                    {% for field in fields %}
+                        {% if field.name not in excluded_fields %}
+                            <th {% if field.name in backup_data_fields %}style="background-color:#b30000; color: white; font-size:12px; font-weight:500;"
+                                {% elif field.name in deduction_data_fields %}style="background-color:#004d00; color: white; font-size:12px; font-weight:500;"
+                                {% elif field.name in invoice_data_fields %}style="background-color:#004080; color: white; font-size:12px; font-weight:500;"
+                                {% elif field.name in price_change_fields %}style="background-color:#FF9900; color: white; font-size:12px; font-weight:500;"
+                                {% elif field.name in calculated_fields %}style="background-color:#392613; color: white; font-size:12px; font-weight:500;"
+                                {% endif %}>
+                                <a href="?search={{ search_query }}&sort={{ field.name }}">{{ field.verbose_name }}</a>
+                            </th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+              {% for instance in page_obj.object_list %}
+                  <tr>
+                      {% for field in fields %}
+                          {% if field.name not in excluded_fields %}
+                        <td>{{ instance|get_field_value:field.name }}</td>
+                      {% endif %}
+                      {% endfor %}
+                  </tr>
+              {% endfor %}
+          </tbody>
+              </table>
+            </div>
+            <div class="card-footer d-flex align-items-center">
+              {% if page_obj.has_previous %}
+                <span style="color:blue;">
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page=1">&laquo; First</a>
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page={{ page_obj.previous_page_number }}">Previous</a>
+                </span>
+                &nbsp;
+              {% endif %}
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+              {% if page_obj.has_next %}
+                &nbsp;
+                <span style="color:blue;">
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page={{ page_obj.next_page_number }}">Next</a>
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page={{ page_obj.paginator.num_pages }}">&raquo; Last</a>
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}

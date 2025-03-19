@@ -1,0 +1,99 @@
+{% extends "base.html" %} 
+{% block title %}Data Transformation{% endblock %}
+ {% block content %}
+  <body>
+    <div class="page page-center">
+      <div class="container container-tight py-4">
+        <div class="card card-md">
+          <div class="card-body">
+            <h1 class="h2 text-center mb-4">Transform OSD Data</h1>
+            <form method="POST" action="{% url 'transform_osd_data' %}">
+                 {% csrf_token %} 
+              
+              <input type="checkbox" id="osd_validation" name="osd_validation">
+              <label for="osd_validation">OSD validation</label>
+              </br>
+              <input type="checkbox" id="osd_calculations" name="osd_calculations">
+              <label for="osd_calculations">OSD Calculations</label>
+              </br>
+              
+              <input type="checkbox" id="deductions_calculations" name="deductions_calculations">
+              <label for="deductions_calculations">Update Workflow Table</label>
+              </br>
+              {% comment %} <input type="checkbox" id="pod_calculations" name="pod_calculations">
+              <label for="checkbox">POD Calculations</label>
+              </br> {% endcomment %}
+              
+              
+
+            </br>
+              <div align=center>
+              <button class="btn btn-primary w-75" type="submit" id="submit-btn" disabled>Execute</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#osd_validation').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#remit_calculate').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#osd_calculations').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#pod_calculations').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#deductions_calculations').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#vbrp_group').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#unsalable_rules').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#po_calculation').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+    });
+  </script> {% endblock %}

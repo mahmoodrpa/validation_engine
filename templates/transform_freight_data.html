@@ -1,0 +1,49 @@
+{% extends "base.html" %} 
+{% block title %}Data Transformation{% endblock %}
+ {% block content %}
+  <body>
+    <div class="page page-center">
+      <div class="container container-tight py-4">
+        <div class="card card-md">
+          <div class="card-body">
+            <h1 class="h2 text-center mb-4">Transform OSD Data</h1>
+            <form method="POST" action="{% url 'transform_freight_data' %}">
+                 {% csrf_token %} 
+              
+              <input type="checkbox" id="freight_validation" name="freight_validation">
+              <label for="freight_validation">Freight validation</label>
+              </br>
+              <input type="checkbox" id="freight_calculations" name="freight_calculations">
+              <label for="freight_calculations">Freight Calculations</label>
+              </br>
+              
+            </br>
+              <div align=center>
+              <button class="btn btn-primary w-75" type="submit" id="submit-btn" disabled>Execute</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#freight_validation').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#freight_calculations').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      
+    });
+  </script> {% endblock %}

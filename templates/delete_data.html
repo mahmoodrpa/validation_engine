@@ -1,0 +1,161 @@
+{% extends "base.html" %} 
+{% block title %} Delete Data{% endblock %}
+ {% block content %}
+  <body>
+    <div class="page page-center">
+      <div class="container container-tight py-4">
+        <div class="card card-md">
+          <div class="card-body">
+            <h1 class="h2 text-center mb-4">Delete Data</h1>
+            <form method="POST" action="{% url 'delete_data' %}"> 
+              {% csrf_token %} 
+              <input type="checkbox" id="delete_remit" name="delete_remit">
+              <label for="checkbox">Remittance Data</label>
+              </br>
+              
+              <input type="checkbox" id="delete_promoagreement" name="delete_promoagreement">
+              <label for="checkbox">Promo Agreement Data</label>
+              </br>
+
+              <input type="checkbox" id="delete_promobackup" name="delete_promobackup">
+              <label for="checkbox">Promo Backup Data</label>
+              </br>
+              
+              <input type="checkbox" id="delete_promo_group" name="delete_promo_group">
+              <label for="checkbox">Promo Group Data</label>
+              </br>
+
+              <input type="checkbox" id="delete_podata" name="delete_podata">
+              <label for="checkbox">PO Data</label>
+              </br>
+
+              
+              <input type="checkbox" id="delete_promo_validation" name="delete_promo_validation">
+              <label for="checkbox">Promo Validation Data</label>
+              </br>
+
+              
+              <button class="btn btn-primary w-100" type="submit" id="submit-btn" disabled>Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#unsalable_combined').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_remit').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_promoagreement').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_promobackup').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_promo_group').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_podata').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_grouppodata').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_promo_validation').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_rules').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_costco_un_backup').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_price_increase').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_discontinued_items').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_product_master').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_swell_terms').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#delete_vbrp').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#unsalable_rules').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+    });
+  </script> {% endblock %}

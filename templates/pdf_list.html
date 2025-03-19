@@ -1,0 +1,93 @@
+
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}POD List{% endblock %}
+{% load model_helpers %}
+{% block content %}
+<div class="page-body">
+  <div class="container-xl">
+    <div class="card">
+      <h2 font align=center><strong>POD List</strong></h2>
+    </div>
+  </div>
+  <br/>
+  <div class="page">
+    <div class="row row-cards">
+      <div class="col-12">
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table card-table table-vcenter text-nowrap datatable">
+              <thead>
+                  <tr>
+                      {% comment %} <th>S.No</th> {% endcomment %}
+                      {% comment %} <th>Inv SKU</th> {% endcomment %}
+                      <th>POD File</th>
+                      <th>Order Number</th>
+                      <th>Invoice Number</th>
+                      <th>BOL</th>
+                      <th>SKU</th>
+                      <th>Shortage</th>
+                      <th>Damage</th>
+                      <th>Returns</th>
+                      <th>Overage</th>
+                      <th>Net Shortage</th>
+                      <th>Customer Sign</th>
+                      <th>Carrier Sign</th>
+                      <th>Subject to Count</th>
+                      <th>POD Found</th>
+                      <th>Update</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for pod_detail in page_obj %}
+                      <tr>
+                          {% comment %} <td>{{ forloop.counter }}</td> {% endcomment %}
+                          {% comment %} <td>{{ pod_detail.inv_sku }}</td> {% endcomment %}
+                          {% comment %} <td><a href="{{ pod_detail.pod_file.url }}" target="_blank" style="color: blue; text-decoration: underline;">{{ pod_detail.pod_file.name }}</a></td> {% endcomment %}
+                          <td><a href="{{ pod_detail.pod_file.url }}" target="_blank" style="color: blue; text-decoration: underline;">{{ pod_detail.pod_file.url|filename }}</a></td>
+                          <td>{{ pod_detail.order_number }}</td>
+                          <td>{{ pod_detail.invoice_number }}</td>
+                          <td>{{ pod_detail.bol }}</td>
+                          <td>{{ pod_detail.sku }}</td>
+                          <td>{{ pod_detail.shortage }}</td>
+                          <td>{{ pod_detail.damage }}</td>
+                          <td>{{ pod_detail.returns }}</td>
+                          <td>{{ pod_detail.overage }}</td>
+                          <td>{{ pod_detail.net_shortage }}</td>
+                          <td>{{ pod_detail.customer_sign }}</td>
+                          <td>{{ pod_detail.carrier_sign }}</td>
+                          <td>{{ pod_detail.subject_to_count }}</td>
+                          <td>{{ pod_detail.pod_found }}</td>
+                          <td><a href="{% url 'update_pod_details' pod_detail.id %}" class="btn btn-sm btn-primary">Update</a></td>
+                      </tr>
+                  {% empty %}
+                      <tr>
+                          <td colspan="17">No POD details available</td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer d-flex align-items-center">
+            {% if page_obj.has_previous %}
+              <span style="color: blue;">
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+              </span>
+              &nbsp;
+            {% endif %}
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            {% if page_obj.has_next %}
+              &nbsp;
+              <span style="color: blue;">
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">&raquo; Last</a>
+              </span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

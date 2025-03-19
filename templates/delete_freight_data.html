@@ -1,0 +1,48 @@
+{% extends "base.html" %} 
+{% block title %} Delete Freight Data{% endblock %}
+{% block content %}
+  <body>
+    <div class="page page-center">
+      <div class="container container-tight py-4">
+        <div class="card card-md">
+          <div class="card-body">
+            <h1 class="h2 text-center mb-4">Delete OSD Data</h1>
+            <form method="POST" action="{% url 'delete_freight_data' %}"> 
+              {% csrf_token %} 
+              
+              <input type="checkbox" id="delete_deduction" name="delete_deduction">
+              <label for="delete_deduction">Deduction Data</label>
+              <br>
+              
+              <input type="checkbox" id="delete_backup" name="delete_backup">
+              <label for="delete_backup">Backup Data</label>
+              <br>
+              
+              <input type="checkbox" id="delete_invoice_data" name="delete_invoice_data">
+              <label for="delete_invoice_data">Invoice Data</label>
+              <br>
+              
+              <input type="checkbox" id="delete_validation" name="delete_validation">
+              <label for="delete_validation">Validation Data</label>
+              <br>
+
+              <button class="btn btn-primary w-100" type="submit" id="submit-btn" disabled>Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('input[type="checkbox"]').change(function() {
+        if ($('input[type="checkbox"]:checked').length > 0) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+    });
+  </script>
+{% endblock %}

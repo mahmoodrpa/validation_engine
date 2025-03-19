@@ -1,0 +1,83 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page page-center">
+  <div class="container container-tight py-4">
+    <div class="card card-md">
+      <div class="card-body">
+        <h2 class="h2 text-center mb-4">Upload File</h2>
+        <form action="{% url 'upload' %}" method="post" enctype="multipart/form-data" autocomplete="off" novalidate>
+          {% csrf_token %}
+          <div class="mb-2">
+            <label class="form-label">Data Category</label>
+            <select class="form-select" name="category" id="category-select">
+              <option value="">Select a category</option>
+              {% for category in categories %}
+                <option value="{{ category.data }}">{{ category.data }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Sub-Category</label>
+            <select class="form-select" name="subcategories" id="subcategory-select" disabled>
+              <option value="">Select a sub-category</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Custom File Input</label>
+            <div class="input-group input-group-flat">
+              <input type="file" class="form-control" name="excel_file">
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <button type="submit" class="btn btn-primary w-100">Upload File</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+</div>
+
+<script>
+  var categorySelect = document.getElementById('category-select');
+  var subcategorySelect = document.getElementById('subcategory-select');
+
+  var subcategoryOptions = {
+    {% for category in categories %}
+      '{{ category.data }}': [
+        {% for subcategory in category.subcategories %}
+          '{{ subcategory }}',
+        {% endfor %}
+      ],
+    {% endfor %}
+  };
+
+  categorySelect.addEventListener('change', function() {
+    var category = this.value;
+    subcategorySelect.innerHTML = '<option value="">Select a sub-category</option>';
+    subcategorySelect.disabled = true;
+
+    if (category && subcategoryOptions.hasOwnProperty(category)) {
+      var subcategories = subcategoryOptions[category];
+
+      subcategories.forEach(function(subcategory) {
+        var option = document.createElement('option');
+        option.value = subcategory;
+        option.textContent = subcategory;
+        subcategorySelect.appendChild(option);
+      });
+
+      subcategorySelect.disabled = false;
+    }
+  });
+</script>
+
+
+{% endblock %}

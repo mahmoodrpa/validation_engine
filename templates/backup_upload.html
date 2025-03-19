@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Upload{% endblock %}
+{% block content %}
+<body>
+<style>
+  #progress-bar {
+    height: 10px;
+    background-color: #f5f5f5;
+    margin-top: 10px;
+  }
+  
+  #progress-bar::after {
+    content: "";
+    display: block;
+    height: 100%;
+    background-color: #007bff;
+    width: 0;
+    transition: width 0.3s ease-in-out;
+  }
+</style>
+<div class="page page-center">
+  <div class="container container-tight py-4">
+    <div class="card card-md">
+      <div class="card-body">
+        <h2 class="h2 text-center mb-4">Upload File</h2>
+        {% if error %}
+          <div class="alert alert-danger" role="alert">
+            {{ error }}
+          </div>
+        {% endif %}
+        <form action="{% url 'backup_upload' %}" method="post" enctype="multipart/form-data" autocomplete="off" novalidate>
+          {% csrf_token %}
+          <div class="mb-2">
+            <label class="form-label">Data Sources</label>
+            <select class="form-select" name="category" id="category-select">
+              <option value="">Select a source</option>
+              {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Retailer</label>
+            <select class="form-select" name="retailer" id="retailer-select">
+              <option value="">Select a retailer</option>
+            </select>
+          </div>
+          
+          <div class="mb-2">
+            <label class="form-label">Subcategories</label>
+            <select class="form-select" name="subcategories" id="subcategory-select">
+              <option value="">Select a data type</option>
+              {% for subcategory in subcategories %}
+                <option value="{{ subcategory }}">{{ subcategory }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-2" id="file-input">
+            <label class="form-label">Custom File Input</label>
+            <div class="input-group input-group-flat">
+              <input type="file" class="form-control" name="excel_file">
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <button type="submit" class="btn btn-primary w-100">Upload File</button>
+          </div>
+
+          <br>
+
+          <a href="/upload_status" class="btn btn-primary">Upload Status</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var categorySelect = document.getElementById("category-select");
+        var retailerSelect = document.getElementById("retailer-select");
+
+        function updateRetailerDropdown() {
+            var selectedCategory = categorySelect.value;
+            retailerSelect.innerHTML = "";
+            if (selectedCategory === "HRC" || selectedCategory === "SAP") {
+                var option = document.createElement("option");
+                option.value = "ALL";
+                option.text = "ALL";
+                retailerSelect.appendChild(option);
+
+                {% comment %} // Add option for "Kroger"
+                var optionKroger = document.createElement("option");
+                optionKroger.value = "Kroger";
+                optionKroger.text = "Kroger";
+                retailerSelect.appendChild(optionKroger); {% endcomment %}
+            } else {
+                {% for retailer in retailers %}
+                    {% if retailer != 'ALL' %}
+                        var option = document.createElement("option");
+                        option.value = "{{ retailer }}";
+                        option.text = "{{ retailer }}";
+                        retailerSelect.appendChild(option);
+                    {% endif %}
+                {% endfor %}
+            }
+        }
+
+        categorySelect.addEventListener("change", updateRetailerDropdown);
+        updateRetailerDropdown();
+
+        var subcategorySelect = document.getElementById("subcategory-select");
+        var fileInput = document.getElementById("file-input");
+
+        subcategorySelect.addEventListener("change", function() {
+            var selectedSubcategory = subcategorySelect.value;
+            if (selectedSubcategory === "POD") {
+                {% comment %} fileInput.innerHTML = '<label class="form-label">Custom File Input (PDF)</label><div class="input-group input-group-flat"><input type="file" class="form-control" name="Pdf_file"></div>'; {% endcomment %}
+                fileInput.innerHTML = '<label class="form-label">Custom File Input</label><div class="input-group input-group-flat"><input type="file" class="form-control" name="excel_file"></div>';
+            } else {
+                fileInput.innerHTML = '<label class="form-label">Custom File Input</label><div class="input-group input-group-flat"><input type="file" class="form-control" name="excel_file"></div>';
+            }
+        });
+    });
+</script>
+
+</body>
+{% endblock %}

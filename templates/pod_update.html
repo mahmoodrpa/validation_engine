@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Update POD Details{% endblock %}
+{% block content %}
+<div class="page-body">
+  <div class="container-xl">
+    <div class="card">
+      <h2 class="text-center"><strong>Update POD Details</strong></h2>
+    </div>
+  </div>
+  {% if success_message %}
+  <div class="container-xl mt-3">
+    <div class="alert alert-success" role="alert">
+      {{ success_message }}
+    </div>
+  </div>
+  {% endif %}
+  <br/>
+  <div class="page">
+    <div class="row row-cards justify-content-center">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              {% comment %} <div class="mb-3">
+                <label for="{{ form.inv_sku.id_for_label }}" class="form-label">Inv SKU</label>
+                {{ form.inv_sku }}
+              </div> {% endcomment %}
+              <div class="mb-3">
+                <label for="{{ form.pod_file.id_for_label }}" class="form-label">POD File</label>
+                {{ form.pod_file }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.order_number.id_for_label }}" class="form-label">Order Number</label>
+                {{ form.order_number }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.invoice_number.id_for_label }}" class="form-label">Invoice Number</label>
+                {{ form.invoice_number }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.bol.id_for_label }}" class="form-label">BOL</label>
+                {{ form.bol }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.sku.id_for_label }}" class="form-label">SKU</label>
+                {{ form.sku }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.shortage.id_for_label }}" class="form-label">Shortage</label>
+                {{ form.shortage }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.damage.id_for_label }}" class="form-label">Damage</label>
+                {{ form.damage }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.returns.id_for_label }}" class="form-label">Returns</label>
+                {{ form.returns }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.overage.id_for_label }}" class="form-label">Overage</label>
+                {{ form.overage }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.net_shortage.id_for_label }}" class="form-label">Net Shortage</label>
+                {{ form.net_shortage }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.customer_sign.id_for_label }}" class="form-label">Customer Sign</label>
+                {{ form.customer_sign }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.carrier_sign.id_for_label }}" class="form-label">Carrier Sign</label>
+                {{ form.carrier_sign }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.subject_to_count.id_for_label }}" class="form-label">Subject to Count</label>
+                {{ form.subject_to_count }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ form.pod_found.id_for_label }}" class="form-label">POD Found</label>
+                {{ form.pod_found }}
+              </div>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

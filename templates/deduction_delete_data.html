@@ -1,0 +1,38 @@
+{% extends "base.html" %} 
+{% block title %} Delete Deduction Data{% endblock %}
+ {% block content %}
+  <body>
+    <div class="page page-center">
+      <div class="container container-tight py-4">
+        <div class="card card-md">
+          <div class="card-body">
+            <h1 class="h2 text-center mb-4">Delete Deduction Data</h1>
+            <form method="POST" action="{% url 'delete_deduction_data' %}"> 
+              {% csrf_token %} 
+              <input type="checkbox" id="delete_deduction" name="delete_deduction">
+              <label for="checkbox">Deduction Data</label>
+              </br>
+              
+              
+
+              
+              <button class="btn btn-primary w-100" type="submit" id="submit-btn" disabled>Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#delete_deduction').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+     
+    });
+  </script> {% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Price Change{% endblock %}
+{% load model_helpers %}
+{% block content %}
+<body>
+    <div class="page-body">
+      <div class="container-xl">
+      <div class="card">
+    
+    <h2 font align=center> <strong>Price Change Report</strong> </h2>
+      </div>
+        </div>
+      <br/>
+    
+      <div class="page">
+        <div class="row row-cards">
+        <div class="col-12">
+        
+        <div class="card">
+        <div class="table-responsive">
+        <table class="table card-table table-vcenter text-nowrap datatable">
+      
+      
+          <thead>
+              <tr>
+                  {% for field in fields %}
+                      <th>{{ field.verbose_name }}</th>
+                  {% endfor %}
+              </tr>
+          </thead>
+          <tbody>
+              {% for instance in page_obj.object_list %}
+                  <tr>
+                      {% for field in fields %}
+                          <td>
+                            {% if field.name in date_field %}
+                              {{ instance|get_field_value:field.name|date:"n/j/Y" }}
+                            {% else %}
+                              {{ instance|get_field_value:field.name }}
+                            {% endif %}
+                          </td>
+                      {% endfor %}
+                  </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+      
+      </table>
+      
+      
+      <div class="card-footer d-flex align-items-center">
+      
+      
+        {% if page_obj.has_previous %}
+        <span style="color:blue;">
+        <a href="?page=1">&laquo First</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </span>
+          &nbsp;
+        {% endif %}
+        
+        
+        Page {{ page_obj.number}} of {{ page_obj.paginator.num_pages }}
+        
+        {% if page_obj.has_next %}
+          &nbsp;
+        <span style="color:blue;">
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">&raquo Last</a>
+        </span>
+        {% endif %}
+      </div>
+      </div></div></div></div></div>
+    
+    </body>
+    
+    
+    
+    {% endblock %}    

@@ -1,0 +1,100 @@
+{% extends "base.html" %} 
+{% block title %}Data Transformation{% endblock %}
+ {% block content %}
+  <body>
+    <div class="page page-center">
+      <div class="container container-tight py-4">
+        <div class="card card-md">
+          <div class="card-body">
+            <h1 class="h2 text-center mb-4">Transform Amazon Data</h1>
+            <form method="POST" action="{% url 'transform_promotions_data' %}">
+                 {% csrf_token %} 
+              
+              <input type="checkbox" id="promo_calculation" name="promo_calculation">
+              <label for="promo_calculation">Promo Calculation</label>
+              </br>
+              <input type="checkbox" id="group_amazon_promo" name="group_amazon_promo">
+              <label for="promo_checkbox">Group Promo Data</label>
+              </br>
+              <input type="checkbox" id="po_calculation" name="po_calculation">
+              <label for="po_calculation">Po Calculation</label>
+              </br>
+              <input type="checkbox" id="group_promo_validation" name="group_promo_validation">
+              <label for="checkbox">Combine Validation Data:</label>
+              </br>
+              <input type="checkbox" id="validation_rules" name="validation_rules">
+              <label for="checkbox">Run Promo Validation Rules:</label>
+              </br>
+              
+
+            </br>
+              <div align=center>
+              <button class="btn btn-primary w-75" type="submit" id="submit-btn" disabled>Execute</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#group_amazon_promo').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#group_promo_validation').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#promo_calculation').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#validation_rules').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#unsalable_combined').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#vbrp_group').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#unsalable_rules').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#po_calculation').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+    });
+  </script> {% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %} 
+{% block title %}Data Transformation{% endblock %}
+ {% block content %}
+  <body>
+    <div class="page page-center">
+      <div class="container container-tight py-4">
+        <div class="card card-md">
+          <div class="card-body">
+            <h1 class="h2 text-center mb-4">Transform Pricing Data</h1>
+            <form method="POST" action="{% url 'transform_pricing_data' %}">
+                 {% csrf_token %} 
+              
+              <input type="checkbox" id="group_pricing" name="group_pricing">
+              <label for="group_pricing">Combine Pricing validation</label>
+              </br>
+              <input type="checkbox" id="backup_data_calculation" name="backup_data_calculation">
+              <label for="backup_data_calculation">Backup Data Update</label>
+              </br>
+              <input type="checkbox" id="validation_data_calculation" name="validation_data_calculation">
+              <label for="validation_data_calculation">Run Validation Rules</label>
+              </br>
+              
+
+            </br>
+              <div align=center>
+              <button class="btn btn-primary w-75" type="submit" id="submit-btn" disabled>Execute</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#group_pricing').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#backup_data_calculation').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      $('#validation_data_calculation').change(function() {
+        if (this.checked) {
+          $('#submit-btn').prop('disabled', false);
+        } else {
+          $('#submit-btn').prop('disabled', true);
+        }
+      });
+      
+    });
+  </script> {% endblock %}

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% load i18n %}
+{% block title %}ADMIN PANEL{% endblock %}
+{% load model_helpers %}
+{% block content %}
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="card">
+                <h2 align="center"><strong>ADD NEW USER</strong></h2>
+            </div>
+        </div>
+        <div class="page-body">
+            <div class="container-xl">
+                <div class="row row-cards">
+                    <div class="col-md-12">
+                        <form class="card" method="post" action="{% url 'admin_panel' %}">
+                            {% csrf_token %}
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label required">{{ form.username.label_tag }}</label>
+                                    <div class="input-group">
+                                        {{ form.username }}
+                                    </div>
+                                    <small class="form-hint">{% trans 'Enter a username.' %}</small>
+                                    {{ form.username.errors }}
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label required">{{ form.password1.label_tag }}</label>
+                                    <div class="input-group">
+                                        {{ form.password1 }}
+                                    </div>
+                                    <small class="form-hint">
+                                        {% trans 'Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.' %}
+                                    </small>
+                                    {{ form.password1.errors }}
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label required">{{ form.password2.label_tag }}</label>
+                                    <div class="input-group">
+                                        {{ form.password2 }}
+                                    </div>
+                                    {{ form.password2.errors }}
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">{% trans "Permissions" %}</label>
+                                    <div>
+                                        <label class="form-check">
+                                            {{ form.is_active }}
+                                            <span class="form-check-label">{% trans "Active" %}</span>
+                                        </label>
+                                        <label class="form-check">
+                                            {{ form.is_staff }}
+                                            <span class="form-check-label">{% trans "Staff" %}</span>
+                                        </label>
+                                        <label class="form-check">
+                                            {{ form.is_superuser }}
+                                            <span class="form-check-label">{% trans "Super User" %}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-end">
+                                <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--user list-->
+    <!-- user_list.html -->
+    <div class="container-xl bg-info">
+        <div class="row row-cards">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header mx-auto text-center">
+                        <h3 class="card-title font-weight-bold">REGISTERED USERS</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-vcenter card-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Date Joined</th>
+                                    <th>Is Staff</th>
+                                    <th>Is Active</th>
+                                    <th>Is Superuser</th>                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        <td><a href="/user_details/{{ user.username }}/">{{ user.username }}</a></td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.first_name }}</td>
+                                        <td>{{ user.last_name }}</td>
+                                        <td>{{ user.date_joined }}</td>
+                                        <td>{{ user.is_staff }}</td>
+                                        <td>{{ user.is_active }}</td>
+                                        <td>{{ user.is_superuser }}</td>
+                                        
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+{% endblock %}

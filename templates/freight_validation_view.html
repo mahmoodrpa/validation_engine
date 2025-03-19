@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}Validation Engine{% endblock %}
+{% load model_helpers %}
+{% block content %}
+<body>
+  <div class="page-body">
+    <div class="container-xl">
+      <div class="card">
+        <h2 font align=center> <strong>Validation Engine - Freight </strong> </h2>
+      </div>
+    </div>
+    <br/>
+    <div class="container-xl">
+      <div class="card">
+        <h2 font align=center> <strong>
+          <form method="GET" action="{% url 'freight_validation_view' %}">
+          <div class="row">
+            <div class="col-8">
+              <div class="mb-3">
+                <label class="form-label">Search</label>
+                <div class="row g-2">
+                  <div class="col">
+                    <input type="text" name="search" class="form-control" placeholder="Search" value="{{ search_query }}">
+                  </div>
+                  <div class="col">
+                    <select name="sort" class="form-select">
+                      <option value="invoice_number" {% if sort_by == 'invoice_number' %}selected{% endif %}>Unique Key</option>
+                      <option value="validation_status" {% if sort_by == 'validation_status' %}selected{% endif %}>Validation Status</option>
+
+                      <!-- Add options for other sortable fields -->
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="mb-3">
+                <div class="form-label"><br/></div>
+                <button type="submit" class="btn btn-primary">Apply</button>
+              </div>
+              </div>
+          </div>
+        </form>
+        </strong> </h2>
+      </div>
+    </div>
+  </br>
+  <!-- Add the summary section here -->
+  <div class="page-body">
+    <div class="container-xl">
+    <div class="row row-cards">
+    
+    <div class="col-12">
+    <div class="row row-cards row-deck">
+    <div class="col">
+    <div class="card">
+    <div class="card-status-top bg-blue"></div>
+     
+    <div class="card-header">
+    <h3 class="card-title">Total Deductions</h3>
+    </div>
+     
+     
+                          
+    {% comment %} <div class="card-body" style ="color:#15558d">${{total_deductions}}</div> {% endcomment %}
+    <div class="card-body" style="color:#15558d">
+      Total Deductions: ${{ total_deductions }}<br>
+      No. of Transactions: {{ num_rows }}
+  </div>
+    </div>
+    
+    </div>
+     
+    <div class="col">
+    <div class="card">
+    <div class="card-status-top bg-red"></div>
+    <div class="card-header">
+    <h3 class="card-title">Total Invalid</h3>
+    </div>
+    {% comment %} <div class="card-body" style="color: #721c24;">${{ total_invalid }}</div> {% endcomment %}
+    <div class="card-body" style="color:#721c24">
+      Total Invalid: ${{ total_invalid }}<br>
+      No. of Transactions: {{ invalid_rows }}
+  </div>
+    </div>
+    </div>
+    <div class="col">
+    <div class="card">
+    <div class="card-status-top bg-green"></div>
+     
+    <div class="card-header">
+    <h3 class="card-title">Total Valid</h3>
+    </div>
+    {% comment %} <div class="card-body" style="font-size: 20px;">${{ total_valid }}</div> {% endcomment %}
+    {% comment %} <div class="card-body" style="color: #155724;">${{ total_valid }}</div>  {% endcomment %}
+    <div class="card-body" style="color:#155724">
+      Total Valid: ${{ total_valid }}<br>
+      No. of Transactions: {{ valid_rows }}
+    </div>
+    
+    
+    {% comment %} <div class="card-body" style="font-size: 20px;">${{ total_valid }}</div> {% endcomment %}
+    </div>
+    </div>
+    <div class="col">
+    <div class="card">
+    <div class="card-status-top bg-purple"></div>
+     
+    <div class="card-header">
+    <h3 class="card-title">RCA Split</h3>
+    </div>
+    <div class="card-body" style="color: #856404;"><span>Freight is already given on the invoice: ${{ rca_split.load_wise_sum }}</span><br>
+     
+    <span>Duplicate Freight Deduction : ${{ rca_split.duplicate_sum }}</span><br>
+     
+    <span>Freight is taken at a higher rate than communicated: ${{ rca_split.rate_wise_sum }}</span> 
+    <span>EDI Mismatch: ${{ rca_split.edi_mismatch_sum }}</span> 
+    {% comment %} <br><span>PO Not Build : 200</span>      {% endcomment %}
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    
+    
+    </div>
+    </div>
+    </div>
+  
+<br/> 
+  <a href="?export" class="btn btn-primary">Export to Excel</a>
+    <div class="page">
+      <div class="row row-cards">
+        
+        <div class="col-12">
+          <div class="card">
+            <div class="table-responsive">
+              
+              <table class="table card-table table-vcenter text-nowrap datatable">
+                <thead>
+                  <tr class="text-center">
+                    {% for field in fields %}
+                    {% if field.name not in excluded_fields %}
+                      <th 
+                      {% if field.name in deduction_fields%}style="background-color:#b30000; color: white; font-size:12px; font-weight:500;"                       
+                      {% elif field.name in backup_fields %} style="background-color:  #e68b30; color: white; font-size:12px; font-weight:500;" 
+                      {% elif field.name in invoice_fields %} style="background-color:  #e74c3c ; color: white; font-size:12px; font-weight:500;"                     
+                      {% elif field.name in edi_fields %} style="background-color:  #004d00; color: white; font-size:12px; font-weight:500;"
+                      {% elif field.name in freight_communication %} style="background-color:  #0c004d; color: white; font-size:12px; font-weight:500;"
+                      {% elif field.name in calculated_fields %} style="background-color:  #D4AC0D; color: white; font-size:12px; font-weight:500;"
+                      
+
+                      {% endif %} >
+                      <a href="?search={{ search_query }}&sort={{ field.name }}">{{ field.verbose_name }}</a>
+                        {% comment %} {% if sort_by == field.name %}
+                          <a href="?search={{ search_query }}&sort={{ field.name }}">{% if request.GET.sort == '-' %}&darr;{% else %}&uarr;{% endif %}</a>
+                        {% else %}
+                          <a href="?search={{ search_query }}&sort={{ field.name }}">{{ field.verbose_name }}</a>
+                        {% endif %} {% endcomment %}
+                      </th>
+                    {% endif %}
+                  {% endfor %}
+                  </tr>
+                </thead>
+                {% for instance in page_obj.object_list %}
+        <tr>
+            {% for field in fields %}
+                {% if field.name not in excluded_fields %}
+                    <td class="text-center">
+                        {% if field.name in date_fields %}
+                            {{ instance|get_field_value:field.name|default:""|date:"n/j/Y" }}
+                        
+                        {% else %}
+                            {{ instance|get_field_value:field.name|default:"" }}
+                        {% endif %}
+                            
+                          </td> 
+                        {% endif %}
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer d-flex align-items-center">
+              {% if page_obj.has_previous %}
+                <span style="color:blue;">
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page=1">&laquo; First</a>
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page={{ page_obj.previous_page_number }}">Previous</a>
+                </span>
+                &nbsp;
+              {% endif %}
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+              {% if page_obj.has_next %}
+                &nbsp;
+                <span style="color:blue;">
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page={{ page_obj.next_page_number }}">Next</a>
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page={{ page_obj.paginator.num_pages }}">&raquo; Last</a>
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}

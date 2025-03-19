@@ -1,0 +1,15 @@
+Hi Team,
+
+This is in reference to the validation done on the below deduction taken for shortages of {{ deduction_amount }} on invoice# {{ invoice_number }}, PO# {{ po_number }}. Per our further validation from the attached POD/BOL and delivery receipt, the deduction seems to be invalid.
+
+Kindly review and repay the deducted amount at your earliest convenience.
+
+Account    Customer Name    Invoice#    PO#    Reason    Amount 
+{{ account }}    {{ customer_name }}    {{ invoice_number }}    {{ po_number }}    Shortage    {{ invalid_amount }}
+
+Please review attached supporting documents and provide repayment for invalid shortages. If this has already been paid, kindly provide me check information so that I can clear the cases from my books.
+If you have any documentation which states valid shortages, kindly share the same.
+Appreciate your help and quick response in this matter.
+
+Thanks & Regards
+Deduction Analyst

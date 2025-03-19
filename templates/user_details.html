@@ -1,0 +1,84 @@
+{% extends "base.html" %} 
+
+{% block title %}Profile Details{% endblock %}
+
+{% block content %}
+<div class="page">      
+    <div class="page-wrapper">
+        <!-- Page header -->
+        <div class="page-header d-print-none">
+            <div class="container-xl">
+                <div class="row g-2 align-items-center">
+                    <div class="col">
+                        <h2 class="page-title">Profile</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Page body -->
+        <div class="page-body">
+            <div class="container-xl">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-3 d-none d-md-block border-end">
+                            <div class="card-body">
+                                <h4 class="subheader">Settings</h4>
+                                <div class="list-group list-group-transparent">
+                                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center active">My Account</a>
+                                    <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">Change Password</a>    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col d-flex flex-column">
+                            <div class="card-body">
+                                <h2 class="mb-4">My Account</h2>
+                                <h3 class="card-title">Profile Details</h3>
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span class="avatar avatar-xl" style="background-image: url(./static/avatars/000m.jpg)"></span>
+                                    {% comment %} </div>
+                                    <div class="col-auto">
+                                        <a href="#" class="btn">Change profile picture</a>
+                                    </div>
+                                    <div class="col-auto">
+                                        <a href="#" class="btn btn-ghost-danger">Delete profile picture</a>
+                                    </div>
+                                </div> {% endcomment %}
+                                
+                                <h3 class="card-title mt-4">User Details</h3>
+                                <form method="post" action="{% url 'user_details' username=user.username %}">
+                                    {% csrf_token %}
+                                <p><strong>Username:</strong> {{ user.username }}</p>
+                                <p><strong>Email:</strong> {{ user.email }}</p>
+                                <p><strong>First Name:</strong> {{ user.first_name }}</p>
+                                <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+                                <p><strong>Date Joined:</strong> {{ user.date_joined }}</p
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="is_active" name="is_active" {% if user.is_active %}checked{% endif %}>
+                                        <label class="form-check-label" for="is_active">Is Active</label>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="is_staff" name="is_staff" {% if user.is_staff %}checked{% endif %}>
+                                        <label class="form-check-label" for="is_staff">Is Staff</label>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="is_superuser" name="is_superuser" {% if user.is_superuser %}checked{% endif %}>
+                                        <label class="form-check-label" for="is_superuser">Is Superuser</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </form>
+                            </div>
+                            <div class="card-footer bg-transparent mt-auto">
+                                <div class="btn-list justify-content-end">
+                                    <a href="/" class="btn">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

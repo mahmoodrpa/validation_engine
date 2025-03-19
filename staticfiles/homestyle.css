@@ -1,0 +1,84 @@
+body {
+  padding-bottom: 20px;
+  margin-top: 80px; /* Ensure space for fixed navbar */
+  background-color: #ffffff; /* White background color */
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+.page {
+  display: flex;
+  width: 100%; /* Adjust width as needed */
+  margin: 0 auto; /* Center align the chart */
+  padding: 20px; /* Add padding around content */
+  background-color: #ffffff; /* White background color */
+}
+
+.ticker-header {
+  background-color: #095caf; /* Choose your preferred background color */
+  color: white; /* White text color */
+  padding: 10px 20px;
+  margin: 0;
+  border-bottom: 1px solid #ddd; /* Optional: adds a border below the header */
+  width: 100%; /* Ensure it spans the entire width */
+  text-align: center; /* Center-align text if desired */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+
+
+.ticker-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px; /* Space between ticker items */
+  margin-bottom: 20px; /* Space between ticker section and chart section */
+}
+
+.ticker-item {
+  flex: 1;
+  padding: 10px;
+  border: none; /* Remove border */
+  border-radius: 5px; /* Optional: Adjust or remove as needed */
+  text-align: center;
+  background-color: #ffffff; /* Optional: Adjust background color if needed */
+}
+
+.ticker-item h4 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.ticker-item p {
+  margin: 10px 0 0;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center; /* Center the charts horizontally */
+  gap: 20px; /* Space between the charts */
+  
+ 
+}
+
+.chart-item {
+  flex: 0 0 45%; /* Adjust chart width, 45% for two charts to fit side by side */
+  border: 1px solid rgba(0, 0, 0, 0.1);  /* Thin border around the chart */
+  padding: 10px;  /* Padding between the chart and border */
+  background-color: #fff;  /* Background color for the container */
+}
+
+.chart-container canvas {
+  width: 100%;
+  height: 300px; /* Ensures both charts have a uniform height */
+}
+
+
+
+
+
+

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="text-center">Create Billback Package</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{% url 'create_billback_package' %}">
+                {% csrf_token %}
+                
+                <!-- Select All Checkbox -->
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="select_all" onclick="toggleSelectAll()">
+                    <label for="select_all" class="form-check-label">Select All</label>
+                </div>
+
+                <!-- Scrollable List Box -->
+                <div class="list-group mb-3" style="max-height: 200px; overflow-y: auto; width: auto; max-width: 600px; margin: 0 auto;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Invoice Number</th>
+                                <th>Customer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detail in invalid_invoices %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="form-check-input" name="selected_invoices" value="{{ detail.invoice_number }}">
+                                    </td>
+                                    <td>{{ detail.invoice_number }}</td>
+                                    <td>{{ detail.standard_customer }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-success" id="submit_button" disabled>Create Billback Package</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Script to handle Select All functionality -->
+<script>
+function toggleSelectAll() {
+    var checkboxes = document.querySelectorAll('input[name="selected_invoices"]');
+    var selectAllCheckbox = document.getElementById('select_all');
+    var submitButton = document.getElementById('submit_button');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+    });
+    submitButton.disabled = !selectAllCheckbox.checked;
+}
+
+// Enable submit button if any invoice is selected
+document.addEventListener('DOMContentLoaded', function() {
+    var checkboxes = document.querySelectorAll('input[name="selected_invoices"]');
+    var submitButton = document.getElementById('submit_button');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            submitButton.disabled = !Array.from(checkboxes).some(cb => cb.checked);
+        });
+    });
+});
+</script>
+{% endblock %}

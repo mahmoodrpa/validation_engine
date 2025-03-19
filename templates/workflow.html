@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}Workflow{% endblock %}
+{% load model_helpers %}
+{% block content %}
+{% load static %}
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="page-body">
+    <div class="container-xl">
+      <div class="card">
+        <h2 font align=center> <strong>Deductions Workflow</strong> </h2>
+      </div>
+    </div>
+  
+    <br/>
+
+    <!-- Refresh Button -->
+    <div style="display: flex; gap: 10px;">
+      <form method="post" action="{% url 'refresh_workflow' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Refresh Workflow Data</button>
+      </form>
+      
+      <form action="{% url 'create_billback_package' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Create Billback Packages</button>
+      </form>
+    </div>
+    
+
+    <div class="page">
+      <div class="row row-cards">
+        
+        <div class="col-12">
+          <div class="card">
+            <div class="table-responsive">
+              <table class="table card-table table-vcenter text-nowrap datatable">
+                <thead>
+                  <tr class="text-center">
+                    <th colspan="{{ action_fields|length }}" style="background-color: #d19d0e; color: white;">Actions</th>
+                    <th colspan="{{ deduction_fields|length }}" style="background-color: #4f71df; color: white;">Deductions Data</th>
+                    <th colspan="{{ invoice_fields|length }}" style="background-color: #e74c3c; color: white;">Invoice Data</th>
+                    <th colspan="{{ POD_fields|length }}" style="background-color: #004d00; color: white;">POD Data</th>
+                    <th colspan="{{ calculated_fields|length }}" style="background-color: #D4AC0D; color: white;">Validation Data</th>
+                    <th colspan="{{ rca_fields|length }}" style="background-color: #26bd47; color: white;">RCA</th>
+                    <th style="width: 3000px; background-color: #f39c12; color: white;">Attachments</th>  <!-- New Attachments column -->
+                  </tr>
+                  <tr class="text-center">
+                    <th></th>
+                    {% for field in fields %}
+                    {% if field.name not in excluded_fields %}
+                      <th style="background-color:white; color: black; font-size:12px; font-weight:500;">
+                        <a href="?search={{ search_query }}&sort={{ field.name }}">{{ field.verbose_name }}</a>
+                      </th>
+                    {% endif %}
+                    {% endfor %}
+                    <th></th>  <!-- Placeholder for Attachments column -->
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for instance in page_obj.object_list %}
+                  <tr id="row-{{ instance.id }}">
+                    <form method="post" action="{% url 'edit_workflow' instance.id %}">
+                      {% csrf_token %}
+                      <td class="text-center">
+                        <button type="button" class="btn btn-warning" onclick="toggleEditMode({{ instance.id }})">Edit</button>
+                        <button type="submit" class="btn btn-success" style="display: none;" id="save-{{ instance.id }}">Save</button>
+                      </td>
+                      {% for field in fields %}
+                      {% if field.name not in excluded_fields %}
+                          <td class="text-center">
+                              {% if field.name == "billback_package" %}
+                                  <!-- Show download link only for invalid deductions -->
+                                  {% if instance.validation_status == 'Invalid' and instance.billback_package %}
+                                      <a href="{{ instance.billback_package }}" class="btn btn-info" download>Download Billback Package</a>
+                                  {% else %}
+                                      No package available
+                                  {% endif %}
+                              {% else %}
+                                  <!-- Display other fields as normal -->
+                                  {% if field.name in date_fields %}
+                                      <input type="date" name="{{ field.name }}" 
+                                             value="{{ instance|get_field_value:field.name|date:'Y-m-d' }}" 
+                                             readonly class="form-control">
+                                  {% else %}
+                                      <input type="text" name="{{ field.name }}" 
+                                             value="{{ instance|get_field_value:field.name|default:'' }}" 
+                                             readonly class="form-control">
+                                  {% endif %}
+                              {% endif %}
+                          </td>
+                      {% endif %}
+                  {% endfor %}
+
+                  <!-- New Attachments Column -->
+                  <td class="attachments-column text-center">
+                    {% with instance.get_attachments as attachments %}
+                        {% for type, files in attachments.items %}
+                            {% for file in files %}
+                                <a href="/{{ UPLOADS_URL }}{{ file }}" target="_blank" rel="noopener noreferrer">
+                                    {% if type == "invoice" %}
+                                        <img src="{% static 'invoice_icon.png' %}" alt="Invoice" class="attachments-icon" title="Invoice">
+                                    {% elif type == "pod" %}
+                                        <img src="{% static 'pod_icon.png' %}" alt="POD" class="attachments-icon" title="POD">
+                                    {% elif type == "backup" %}
+                                        <img src="{% static 'backup_icon.png' %}" alt="Backup" class="attachments-icon" title="Backup">
+                                    {% endif %}
+                                </a>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endwith %}
+                </td>
+                
+                    </form>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card-footer d-flex align-items-center">
+              {% if page_obj.has_previous %}
+                <span style="color:blue;">
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page=1">&laquo; First</a>
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page={{ page_obj.previous_page_number }}">Previous</a>
+                </span>
+                &nbsp;
+              {% endif %}
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+              {% if page_obj.has_next %}
+                &nbsp;
+                <span style="color:blue;">
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page={{ page_obj.next_page_number }}">Next</a>
+                  <a href="?search={{ search_query }}&sort={{ sort_by }}&page={{ page_obj.paginator.num_pages }}">&raquo; Last</a>
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript to toggle edit mode -->
+  <script>
+    function toggleEditMode(rowId) {
+      let row = document.querySelector(`#row-${rowId}`);
+      let inputs = row.querySelectorAll('input');
+      let saveButton = document.getElementById(`save-${rowId}`);
+      inputs.forEach(input => {
+        input.removeAttribute('readonly');
+      });
+      saveButton.style.display = 'inline-block';
+    }
+  </script>
+</body>
+<style>
+  .attachments-column {
+    /* Set a minimum width */
+    min-width: 150px; /* Adjust as needed */
+}
+
+.attachment-link {
+    display: inline-block; /* Allows for spacing between icons */
+    margin: 0 5px; /* Adds space between icons */
+}
+
+.attachments-icon {
+    width: 20px; /* Icon width */
+    height: 20px; /* Icon height */
+}
+</style>
+
+{% endblock %}
